@@ -44,8 +44,6 @@ namespace MatchGame
         {
             if (matchesFound == 8)
             {
-                timeTextBlock.Text = "You WON!!!";
-                Thread.Sleep(2000);
                 SetUpGame();
             }
         }
@@ -69,11 +67,19 @@ namespace MatchGame
 
             foreach (TextBlock textBlock in mainGrid.Children.OfType<TextBlock>())
             {
-                int randomIndex = random.Next(animalEmojis.Count);
-                string animal = animalEmojis[randomIndex];
-                textBlock.Text = animal;
-                animalEmojis.RemoveAt(randomIndex);
+                if (textBlock.Name != "timeTextBlock")
+                {
+                    textBlock.Visibility = Visibility.Visible;
+                    int randomIndex = random.Next(animalEmojis.Count);
+                    string animal = animalEmojis[randomIndex];
+                    textBlock.Text = animal;
+                    animalEmojis.RemoveAt(randomIndex);
+                }
             }
+
+            timer.Start();
+            matchesFound = 0;
+            tenthOfSecondsElapsed = 0;
         }
 
         TextBlock lastTextBlockClicked;
@@ -91,6 +97,7 @@ namespace MatchGame
             }
             else if (lastTextBlockClicked.Text == textBlock.Text)
             {
+                matchesFound++;
                 textBlock.Visibility = Visibility.Hidden;
                 isFindingMatch = false;
             }
